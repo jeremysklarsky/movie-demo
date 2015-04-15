@@ -19,10 +19,6 @@ class Critic < ActiveRecord::Base
 
   def get_review(movie)
     movie.critic_reviews.find{|critic_review| critic_review.critic == self}.score
-<<<<<<< HEAD
-=======
-    
->>>>>>> e2b920e6fdc3817cd86aff706028ef3666ed1c16
   end
 
 end
