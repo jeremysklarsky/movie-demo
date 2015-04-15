@@ -16,13 +16,20 @@ class User < ActiveRecord::Base
   end
 
   def similarity_score(critic)
+<<<<<<< HEAD
     movies = critic_matcher.common_movies(critic)
     scores_set = []
     movies.each do |movie|
+      
      scores_set << [movie.find_review(self).score, movie.find_review(critic).score]
    end
+
    avg_difference = scores_set.collect{|set| (set[0]-set[1]).abs}.inject(:+) / movies.size.to_f
+   
    (100 - avg_difference).round(2)
+
+
+
   end
 
   def critic_overlap(critic)
