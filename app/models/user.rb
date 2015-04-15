@@ -16,7 +16,6 @@ class User < ActiveRecord::Base
   end
 
   def similarity_score(critic)
-<<<<<<< HEAD
     movies = critic_matcher.common_movies(critic)
     scores_set = []
     movies.each do |movie|
