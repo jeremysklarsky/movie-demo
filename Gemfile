@@ -3,6 +3,7 @@ gem 'figaro'
 gem 'unirest'
 gem "rails-erd"
 gem 'metacritic', :git => "https://github.com/jeremysklarsky/metacritic"
+gem 'rails-jquery-autocomplete'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.0'

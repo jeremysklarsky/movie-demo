@@ -9,8 +9,16 @@ Rails.application.routes.draw do
   post 'sessions' => 'sessions#create'
   get 'signup' => 'users#new', :as => 'signup' 
 
-  resources :users, :except => ['new']
-  
+  resources :users, :except => ['new'] do 
+    resources :reviews, :only => ['new', 'create'], :controller => "users/reviews"
+  end
+
+# resources :users, :except => ['new'] do 
+#   resources :dinners, :controller => "users/dinners" do
+#     post :invite, :on => :member
+#     get :rsvp, :on => :member
+#   end
+
 
   # You can have the root of your site routed with "root"
   # root 'welcome#index'

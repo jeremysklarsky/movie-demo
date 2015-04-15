@@ -1,2 +1,6 @@
-USER SHOW PAGE
-<%= @user.name %>
+<div class="well well-md col-md-10 col-md-offset-1">
+
+<h3>Welcome, <%= @user.name %>!</h3>
+
+<%= link_to "Rate A Movie!", new_user_review_path(@user) %>
+</div>
