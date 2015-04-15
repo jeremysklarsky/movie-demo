@@ -11,9 +11,6 @@ class User < ActiveRecord::Base
          # and use confirmation to ensure they always match
          :confirmation => true
 
-  
-
-
   has_many :reviews, :foreign_key => 'user_id', :class_name => "UserReview"
   has_many :movies, :through => :reviews
   
