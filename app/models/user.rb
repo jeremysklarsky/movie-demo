@@ -1,6 +1,19 @@
 class User < ActiveRecord::Base
-  # has_secure_password
+  validates_uniqueness_of :email
+  validates_presence_of :name, :email
+  validates_format_of :email, :with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i
+  has_secure_password
+  validates :password, 
+         # you only need presence on create
+         :presence => { :on => :create },
+         # allow_nil for length (presence will handle it on create)
+         :length   => { :minimum => 6, :allow_nil => true },
+         # and use confirmation to ensure they always match
+         :confirmation => true
+
   
+
+
   has_many :reviews, :foreign_key => 'user_id', :class_name => "UserReview"
   has_many :movies, :through => :reviews
   
@@ -16,7 +29,6 @@ class User < ActiveRecord::Base
   end
 
   def similarity_score(critic)
-<<<<<<< HEAD
     movies = critic_matcher.common_movies(critic)
     scores_set = []
     movies.each do |movie|

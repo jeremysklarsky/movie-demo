@@ -1,40 +1,30 @@
 require 'rails_helper'
-require 'benchmark'
-RSpec.describe CriticMatcher, type: :model do
-    before :each do 
-    @user = User.create(:name => "Jeremy Sklarsky",:email => "jeremy.sklarsky@gmail.com")
 
-    def movie_factory
+RSpec.describe CriticMatcher, type: :model do
+    before(:each) do 
+      @user = User.create(:name => "Jeremy Sklarsky",:email => "jeremy.sklarsky@gmail.com")
+
       @big_lebowski = Movie.create(:name => "The Big Lebowski", :score => 81)
       @boyhood = Movie.create(:name => "Boyhood",:score => 92) 
       @captain_america = Movie.create(:name => "Captain America", :score => 74)
       @x_men = Movie.create(:name => "X-Men", :score => 78) 
       @rochelle = Movie.create(:name => "Rochelle, Rochelle", :score => 81)
-    end
-
-    def user_review_factory
       @user_review1 = UserReview.create(user_id: @user.id, movie_id: @big_lebowski.id, score: 69)
       @user_review2 = UserReview.create(user_id: @user.id, movie_id: @boyhood.id, score: 95)
       @user_review3 = UserReview.create(user_id: @user.id, movie_id: @captain_america.id, score: 78 )
       @user_review4 = UserReview.create(user_id: @user.id, movie_id: @x_men.id, score: 75)
-    end
 
-    def critic_factory
-      @peter_travers = Critic.create(:name => "Peter Travers")
+
       @ao_scott = Critic.create(:name => "AO Scott")
       @roger_ebert = Critic.create(:name => "Roger Ebert")
       @leonard_maltin = Critic.create(:name => "Leonard Maltin")
       @owen = Critic.create(:name => "Owen Gleiberman")
       @andy = Critic.create(:name => "Andy Greenwald")
-    end  
 
-    def publication_factory
-      @nytimes = Publication.create(:name => "NY Times")
       @ew = Publication.create(:name => "EW")
-    end
+      @nytimes = Publication.create(:name => "NY Times")
 
-    def critic_review_factory
-      CriticReview.create(:critic_id => @peter_travers.id, :movie_id => @big_lebowski.id, :publication_id => @nytimes.id, :score => 90);
+      CriticReview.create(:critic_id => @big_lebowski.id, :publication_id => @nytimes.id, :score => 90);
       CriticReview.create(:critic_id => @peter_travers.id, :movie_id => @boyhood.id, :publication_id => @nytimes.id, :score => 75)
       CriticReview.create(:critic_id => @peter_travers.id, :movie_id => @captain_america.id, :publication_id => @nytimes.id, :score => 100)
       CriticReview.create(:critic_id => @peter_travers.id, :movie_id => @x_men.id, :publication_id => @nytimes.id, :score => 60)
@@ -54,13 +44,15 @@ RSpec.describe CriticMatcher, type: :model do
       CriticReview.create(:critic_id => @leonard_maltin.id, :movie_id => @rochelle.id, :publication_id => @nytimes.id, :score => 75)
       CriticReview.create(:critic_id => @owen.id, :movie_id => @rochelle.id, :publication_id => @ew.id, :score => 90)
       CriticReview.create(:critic_id => @andy.id, :movie_id => @rochelle.id, :publication_id => @ew.id, :score => 50)
-    end
+    # end
+    @user.save
 
-    movie_factory; user_review_factory; critic_factory; publication_factory; critic_review_factory
   end
 
   describe 'model basics' do
     it "knows about the user's reviews" do
+
+      binding.pry
       expect(@user.reviews.size).to eq(4)
     end
 
