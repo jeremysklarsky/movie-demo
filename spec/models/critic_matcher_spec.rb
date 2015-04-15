@@ -2,7 +2,8 @@ require 'rails_helper'
 require 'benchmark'
 RSpec.describe CriticMatcher, type: :model do
     before :each do 
-    @user = User.create(:name => "Jeremy Sklarsky",:email => "jeremy.sklarsky@gmail.com")
+    
+    @user = create(:user)
 
     def movie_factory
       @big_lebowski = Movie.create(:name => "The Big Lebowski", :score => 81)
@@ -57,6 +58,7 @@ RSpec.describe CriticMatcher, type: :model do
     end
 
     movie_factory; user_review_factory; critic_factory; publication_factory; critic_review_factory
+
   end
 
   describe 'model basics' do
