@@ -18,7 +18,7 @@ class UsersController < ApplicationController
   end
 
   def show
-
+    @movies = current_user.movies
   end
 
   private

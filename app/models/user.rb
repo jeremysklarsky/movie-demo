@@ -36,9 +36,6 @@ class User < ActiveRecord::Base
    avg_difference = scores_set.collect{|set| (set[0]-set[1]).abs}.inject(:+) / movies.size.to_f
    
    (100 - avg_difference).round(2)
-
-
-
   end
 
   def critic_overlap(critic)
@@ -69,6 +66,15 @@ class User < ActiveRecord::Base
     # sum and divide (GPA)
   end
 
+  def my_score(movie)
+    if self.movies.include?(movie)
+      UserReview.find_by(user_id: self.id, movie_id: movie.id).score
+    end
+  end
+
+
+
+  
 
   private
 

@@ -1,5 +1,21 @@
 <div class="well well-md col-md-10 col-md-offset-1">
 
 <h3>Rate a movie!</h3>
+<%= form_for @search do |f| %>
+  <%= f.text_field %>
+<% end %>
 
+
+<%= form_for @search do |f| %>
+  <%= f.label :first_name %>:
+  <%= f.text_field :first_name %><br />
+
+  <%= f.label :last_name %>:
+  <%= f.text_field :last_name %><br />
+
+  <%= f.submit %>
+<% end %>
 </div>
+
+
+
