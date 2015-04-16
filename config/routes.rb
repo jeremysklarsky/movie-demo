@@ -9,9 +9,17 @@ Rails.application.routes.draw do
   post 'sessions' => 'sessions#create'
   get 'signup' => 'users#new', :as => 'signup' 
 
+  resources :movies, :only => ['show', 'index']
+  get 'search' => 'search#new', :as => 'search'
+  post 'search' => 'search#create'
+  
   resources :users, :except => ['new'] do 
-    resources :reviews, :only => ['new', 'create'], :controller => "users/reviews"
-  end
+    resources :reviews, :only => ['new', 'create', 'update'], :controller => "users/reviews" 
+
+    end
+
+
+
 
 # resources :users, :except => ['new'] do 
 #   resources :dinners, :controller => "users/dinners" do

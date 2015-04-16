@@ -2,5 +2,12 @@
 
 <h3>Welcome, <%= @user.name %>!</h3>
 
-<%= link_to "Rate A Movie!", new_user_review_path(@user) %>
+<%= link_to "Rate A Movie!", movies_path %>
+
+
+<h4>My reviews</h4>
+<% @movies.each do |movie| %>
+  <p><%= movie.name %>: <%= @user.my_score(movie) %></p>
+<% end %>
+
 </div>

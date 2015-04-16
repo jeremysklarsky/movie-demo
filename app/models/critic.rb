@@ -18,7 +18,9 @@ class Critic < ActiveRecord::Base
   end
 
   def get_review(movie)
-    movie.critic_reviews.find{|critic_review| critic_review.critic == self}.score
+
+    review = movie.critic_reviews.find{|critic_review| critic_review.critic == self}
+    review.score if review
   end
 
 end

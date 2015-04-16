@@ -11,6 +11,7 @@ RSpec.describe CriticMatcher, type: :model do
       @captain_america = Movie.create(:name => "Captain America", :score => 74)
       @x_men = Movie.create(:name => "X-Men", :score => 78) 
       @rochelle = Movie.create(:name => "Rochelle, Rochelle", :score => 81)
+      @prognosis = Movie.create(:name => "Prognosis: Negative", :score => 82)
     end
 
     def user_review_factory
@@ -50,11 +51,17 @@ RSpec.describe CriticMatcher, type: :model do
       CriticReview.create(:critic_id => @owen.id, :movie_id => @captain_america.id, :publication_id => @ew.id, :score => 70)
       CriticReview.create(:critic_id => @owen.id, :movie_id => @x_men.id, :publication_id => @ew.id, :score => 75)
       CriticReview.create(:critic_id => @peter_travers.id, :movie_id => @rochelle.id, :publication_id => @nytimes.id, :score => 80)
-      CriticReview.create(:critic_id => @ao_scott.id, :movie_id => @rochelle.id, :publication_id => @nytimes.id, :score => 60)
-      CriticReview.create(:critic_id => @roger_ebert.id, :movie_id => @rochelle.id, :publication_id => @ew.id, :score => 100)
-      CriticReview.create(:critic_id => @leonard_maltin.id, :movie_id => @rochelle.id, :publication_id => @nytimes.id, :score => 75)
-      CriticReview.create(:critic_id => @owen.id, :movie_id => @rochelle.id, :publication_id => @ew.id, :score => 90)
-      CriticReview.create(:critic_id => @andy.id, :movie_id => @rochelle.id, :publication_id => @ew.id, :score => 50)
+      CriticReview.create(:critic_id => @ao_scott.id, :movie_id => @rochelle.id, :publication_id => @nytimes.id, :score => 80)
+      CriticReview.create(:critic_id => @roger_ebert.id, :movie_id => @rochelle.id, :publication_id => @ew.id, :score => 80)
+      CriticReview.create(:critic_id => @leonard_maltin.id, :movie_id => @rochelle.id, :publication_id => @nytimes.id, :score => 80)
+      CriticReview.create(:critic_id => @owen.id, :movie_id => @rochelle.id, :publication_id => @ew.id, :score => 80)
+      CriticReview.create(:critic_id => @andy.id, :movie_id => @rochelle.id, :publication_id => @ew.id, :score => 80)
+      CriticReview.create(:critic_id => @peter_travers.id, :movie_id => @prognosis.id, :publication_id => @nytimes.id, :score => 50)
+      CriticReview.create(:critic_id => @ao_scott.id, :movie_id => @prognosis.id, :publication_id => @nytimes.id, :score => 100)
+      CriticReview.create(:critic_id => @roger_ebert.id, :movie_id => @prognosis.id, :publication_id => @ew.id, :score => 85)
+      CriticReview.create(:critic_id => @leonard_maltin.id, :movie_id => @prognosis.id, :publication_id => @nytimes.id, :score => 65)
+      CriticReview.create(:critic_id => @owen.id, :movie_id => @prognosis.id, :publication_id => @ew.id, :score => 100)
+      CriticReview.create(:critic_id => @andy.id, :movie_id => @prognosis.id, :publication_id => @ew.id, :score => 90)
     end
 
     movie_factory; user_review_factory; critic_factory; publication_factory; critic_review_factory
@@ -75,7 +82,7 @@ RSpec.describe CriticMatcher, type: :model do
     end
 
     it "knows a critic's average score" do
-      expect(@ao_scott.avg_score).to eq(75.8)
+      expect(@ao_scott.avg_score).to eq(84.6)
     end
   end
 
@@ -119,7 +126,8 @@ RSpec.describe CriticMatcher, type: :model do
     end
 
     it "generates the for the user an adjusted score for a movie" do
-      expect(@user.adjusted_score(@rochelle)).to eq(69.5)
+      expect(@user.adjusted_score(@rochelle)).to eq(80)
+      expect(@user.adjusted_score(@prognosis)).to eq(79.75)
     end
 
   end

@@ -6,6 +6,7 @@ class Movie < ActiveRecord::Base
 
   has_many :movie_genres
   has_many :genres, :through => :movie_genres
+
   
   include Averageable::InstanceMethods
 
@@ -40,5 +41,6 @@ class Movie < ActiveRecord::Base
       "No users have reviewed this film."
     end
   end
+
 
 end
