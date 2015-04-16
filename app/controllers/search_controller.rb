@@ -5,7 +5,6 @@ class SearchController < ApplicationController
   end
 
   def create
-    binding.pry
     @movies = Movie.where("name like ?", "%#{params[:query]}%")
 
     respond_to do |f|

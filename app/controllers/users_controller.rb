@@ -18,7 +18,7 @@ class UsersController < ApplicationController
   end
 
   def show
-    @movies = current_user.movies
+    @movies = current_user.movies.sort_by{|movie|movie.name}
   end
 
   private
