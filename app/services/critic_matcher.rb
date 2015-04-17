@@ -17,7 +17,8 @@ class CriticMatcher
   end
 
   def rank_critics
-    critics = find_user_critics.select{|critic|critic.shared_reviews(@user).size >= 3 }
+    critics = find_user_critics.select{|critic|critic.shared_reviews(@user).
+      size >= 3 }
     critics.sort_by{|critic|user.similarity_score(critic)}.reverse
   end
 

@@ -33,12 +33,9 @@ class User < ActiveRecord::Base
     movies = critic_matcher.common_movies(critic)
     scores_set = []
     movies.each do |movie|
-      
      scores_set << [movie.find_review(self).score, movie.find_review(critic).score]
    end
-
    avg_difference = scores_set.collect{|set| (set[0]-set[1]).abs}.inject(:+) / movies.size.to_f
-   
    (100 - avg_difference).round(2)
   end
 
@@ -84,6 +81,21 @@ class User < ActiveRecord::Base
   end
 
 
+  def average_similarity_score
+    (gather_critics.collect{|critic|self.similarity_score(critic)}.inject(:+) / gather_critics.size.to_f).round(2)
+  end
+
+  def average_similarity_score_std_dev
+    gather_critics.collect{|critic|self.similarity_score(critic)}.standard_deviation.round(2)
+  end
+
+  def rank_critics
+    rankings = {}
+    critic_matcher.rank_critics.each do |critic|
+      rankings[critic] = self.similarity_score(critic)
+    end
+    rankings
+  end
 
   
 
