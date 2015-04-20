@@ -14,6 +14,10 @@ class Movie < ActiveRecord::Base
     self.metacritic_url.gsub("/", "%2F").gsub(":", "%3A")
   end
 
+  def truncated_name
+    self.name
+  end
+
   def reviews
     self.critic_reviews
   end

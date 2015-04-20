@@ -19,6 +19,16 @@ class UsersController < ApplicationController
 
   def show
     @movies = current_user.movies.sort_by{|movie|movie.name}
+    @fact = MovieFact.all.sample.content
+  end
+
+  def stats
+    @user = current_user
+    @top_critic = @user.top_critic
+    @bottom_critic = @user.bottom_critic
+    @user_reviews = @user.reviews
+    @top_rated_movie = @user.top_rated_movie
+    @bottom_rated_movie = @user.bottom_rated_movie
   end
 
   private

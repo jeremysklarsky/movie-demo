@@ -13,8 +13,11 @@ class User < ActiveRecord::Base
 
   has_many :reviews, :foreign_key => 'user_id', :class_name => "UserReview"
   has_many :movies, :through => :reviews
+  has_many :similarity_scores
   
   include Averageable::InstanceMethods
+
+  attr_accessor :top_critic, :bottom_critic, :avg_percentile
 
 
   def gather_critics
@@ -23,24 +26,34 @@ class User < ActiveRecord::Base
 
   def get_relevant_critics(movie)
     gather_critics.select{|critic|critic.movies.include?(movie)}
-  end
-
-  def top_critic
-    critic_matcher.find_top_critic
-  end
+  end 
 
   def similarity_score(critic)
-    movies = critic_matcher.common_movies(critic)
-    scores_set = []
-    movies.each do |movie|
-     scores_set << [movie.find_review(self).score, movie.find_review(critic).score]
-   end
-   avg_difference = scores_set.collect{|set| (set[0]-set[1]).abs}.inject(:+) / movies.size.to_f
-   (100 - avg_difference).round(2)
+    user_movie_ids = self.movies.collect{|movie| movie.id}
+    critic_reviews = CriticReview.where(movie_id: user_movie_ids, critic_id: critic.id ).select{|review|user_movie_ids.include?(review.movie_id)}
+    user_reviews = UserReview.where(user_id: self.id, movie_id: user_movie_ids)
+    differences = []
+    critic_reviews.each do |review|
+      differences << (review.score - user_reviews.select{|r|r.movie_id == review.movie_id}.first.score).abs
+    end
+    (100 - (differences.inject(:+) / differences.size.to_f)).round(2)
+
   end
 
+  def find_similarity_score(critic)
+    @sim_score = SimilarityScore.where(user_id: self.id, critic_id: critic.id)
+    if !@sim_score.empty?
+      @sim_score.first.similarity_score
+    end
+  end 
+
   def critic_overlap(critic)
-    critic_matcher.common_movies(critic).size / self.movies.size.to_f
+    @sim_score = SimilarityScore.where(critic_id: critic.id, user_id: self.id)
+    if !@sim_score.empty?
+      @sim_score.first.review_count / self.movies.size.to_f
+    else
+      0
+    end
 
   end
 
@@ -59,19 +72,28 @@ class User < ActiveRecord::Base
     total_overlap_points = 0
     # grade_sum
     total_score = 0 
-    get_relevant_critics(movie).each do |critic|
+    movie.critics.each do |critic|
     # get similarity scores for each critic
-      overlap = critic_overlap_weighted(critic)
-      sim_score = similarity_score(critic) / 100.0
+      score = SimilarityScore.where(critic_id: critic.id, user_id: self.id)
+      overlap = critic_overlap_weighted(critic)  
+      if !score.empty?
+        sim_score = score.first.similarity_score / 100.0
+      else
+        sim_score = 0
+      end
+
       critic_hash[critic] = {:similarity => sim_score, :overlap => overlap }
       total_overlap_points += overlap
+    # calculate total overlap points (total credits)
       total_score += (critic.get_review(movie))*overlap
     end
-  
-    # calculate total overlap points (total credits)
-
-    (total_score / total_overlap_points.to_f).round(2)
     # sum and divide (GPA)
+    score = (total_score / total_overlap_points.to_f).round(2)
+    if score > 0 
+      score
+    else
+      "Sorry, Vincent needs more vodka and fireworks to figure this out."
+    end
   end
 
   def my_score(movie)
@@ -89,22 +111,101 @@ class User < ActiveRecord::Base
     gather_critics.collect{|critic|self.similarity_score(critic)}.standard_deviation.round(2)
   end
 
-  def rank_critics
-    rankings = {}
-    critic_matcher.rank_critics.each do |critic|
-      rankings[critic] = self.similarity_score(critic)
-    end
-    rankings
+  def get_stats
+    @stats = critic_matcher.get_stats
   end
 
-  
+  def top_critic
+    Critic.find(SimilarityScore.where(user_id: self.id).sort_by{|sim|sim.similarity_score}.reject{|r|r.review_count < 4 }.reverse.first.critic_id)
+  end
 
-  private
+  def bottom_critic
+    Critic.find(SimilarityScore.where(user_id: self.id).sort_by{|sim|sim.similarity_score}.reject{|r|r.review_count < 5 }.first.critic_id)
+  end
+
+  def top_rated_movie
+    Movie.find(self.reviews.sort_by{|review|review.score}.reverse.first.movie_id)
+  end
+
+  def bottom_rated_movie
+    Movie.find(self.reviews.sort_by{|review|review.score}.first.movie_id)
+  end
+
+  def top_critic_similarity
+    self.similarity_score(top_critic)
+  end
+
+  def bottom_critic_similarity
+    self.similarity_score(bottom_critic)
+  end
 
   def critic_matcher
     CriticMatcher.new(self)
   end
 
+  def self.average_score
+    sql = "select avg(score) from user_reviews"
+    result = ActiveRecord::Base.connection.execute(sql)
+    result.first[0].round(2)
+  end
+
+  def update_similarity_score(critic, critic_review, user_review)
+    @similarity_score = self.similarity_scores.find_by(:critic_id => critic.id)
+    new_value = (critic_review.score - user_review.score).abs
+    total_values = @similarity_score.similarity_score * @similarity_score.review_count
+    @similarity_score.review_count += 1
+    total_values += new_value
+    @similarity_score.similarity_score = total_values / @similarity_score.review_count
+    @similarity_score.save
+  end
+
+  def avg_percentile_critics(average)
+
+    sql = "SELECT critics.name, COUNT(*) as review_count, AVG(score) as average 
+      FROM critics 
+      JOIN critic_reviews ON critics.id = critic_reviews.critic_id 
+      GROUP BY critics.name 
+      HAVING review_count > 10
+      ORDER BY average DESC"
+
+    results = ActiveRecord::Base.connection.execute(sql)
+    
+    (results.select{|critic|critic[2]>average}.size / results.select{|critic|critic[2]}.size.to_f).round(1)
+  end
+
+  def avg_percentile_critics_show
+    percentile = self.avg_percentile_critics(self.avg_score)
+    if percentile <= 0.50
+      "This is higher than #{(1-percentile)*100}% of critics."
+    else
+      "This is lower than #{(1-percentile)*100}% of critics."
+    end
+
+  end
+
+  def avg_percentile_users(average)
+
+    sql = "SELECT users.name, COUNT(*) as review_count, AVG(score) as average 
+      FROM users 
+      JOIN user_reviews ON users.id = user_reviews.user_id 
+      GROUP BY users.name 
+      HAVING review_count > 10
+      ORDER BY average DESC"
+
+    results = ActiveRecord::Base.connection.execute(sql)
+    
+    (results.select{|user|user[2]>average}.size / results.select{|user|user[2]}.size.to_f).round(1)
+  end
+
+  def avg_percentile_users_show
+    percentile = self.avg_percentile_users(self.avg_score)
+    if percentile <= 0.50
+      "Your average is score is higher than #{(1-percentile)*100}% of users."
+    else
+      "Your average is score than #{(1-percentile)*100}% of users."
+    end
+
+  end
 
 
 end

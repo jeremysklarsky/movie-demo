@@ -10,10 +10,12 @@
 # twenty_fourteen_movies_two = ["It Felt Like Love","Housebound","The Dog","The Guest","Vic + Flo Saw a Bear","The Lunchbox","Horses of God","Afternoon of a Faun: Tanaquil Le Clercq","Wild","Listen Up Philip","Obvious Child","How to Train Your Dragon 2","Guardians of the Galaxy","The Dance of Reality","Nightcrawler","Happy Valley","Kids for Cash","Aatsinki: The Story of Arctic Cowboys","Waiting for August","Frank","The Retrieval","The Trip to Italy","Honey","Goodbye to Language 3D","Night Moves","The Kingdom of Dreams and Madness","The Battered Bastards of Baseball","Rich Hill","2 Autumns, 3 Winters","Plot for Peace","The Great Flood","Omar","The Skeleton Twins","Dancing in Jaffa","The Vanquishing of the Witch Baba Yaga","X-Men: Days of Future Past","Unrelated","Finding Vivian Maier","Bad Hair","Interstellar","Big Hero 6","Whitey: United States of America v. James J. Bulger","Joe","Like Father, Like Son","A Field in England","A Most Wanted Man","The Imitation Game","Ai Weiwei: The Fake Case","Cheatin'","Beyond the Lights","Once Upon a Time Verônica","Le Week-End","Mistaken for Strangers","Little Feet","Witching and Bitching","Cold in July","A Picture of You","American Sniper","Diplomacy","True Son","In Bloom","The Blue Room","7 Boxes","Exhibition","The Rocket","A People Uncounted","Gore Vidal: The United States of Amnesia","Violette","When I Saw You","The Great Invisible","Brothers Hypnotic","The Way He Looks","The Theory of Everything","The Internet's Own Boy: The Story of Aaron Swartz","The Heart Machine","Dormant Beauty","Nas: Time Is Illmatic","Still Alice","Siddharth","Master of the Universe","The Kill Team","Fed Up","Double Play: James Benning and Richard Linklater","The Raid 2","22 Jump Street","Gebo and the Shadow","Edge of Tomorrow","Hanna Ranch","Copenhagen","Botso","Run & Jump","As It Is in Heaven","Next Goal Wins","Remote Area Medical","Get On Up","Fatal Assistance","Bird People","Maidentrip","Captain America: The Winter Soldier", "Gabrielle"]
 
 # list =["Best Kept Secret", "12 Years a Slave"]
-MOVIES_2013 = ["Zero Dark Thirty", "Amour", "Almayer's Folly", "A Man Vanishes (1967)", "This Is Not a Film", "Nothing But a Man (1964)", "Elena", "The Kid with a Bike", "Gregory Crewdson: Brief Encounters", "Lincoln", "How to Survive a Plague", "Barbara", "Argo", "The Master", "Beasts of the Southern Wild", "Paradise Lost 3: Purgatory", "Holy Motors", "Moonrise Kingdom", "Oslo, August 31st","Looper","The Waiting Room","The Day He Arrives","The Flat","Monsieur Lazhar","The Deep Blue Sea","Ornette: Made in America (1985)","El Velador","In the Family","Burn","Footnote","Marley","Under African Skies","Side by Side","Once Upon a Time in Anatolia","The Trouble with the Truth","Sister","Django Unchained","Skyfall","Tchoupitoulas","Consuming Spirits","A Simple Life","Ai Weiwei: Never Sorry","Silver Linings Playbook","The Secret World of Arrietty","The Queen of Versailles","The Turin Horse","I Wish","Goodbye First Love","West of Memphis","The Sessions","Photographic Memory","The Central Park Five","Wagner's Dream","Life of Pi","Keep the Lights On","Searching for Sugar Man","The Law in These Parts","Oki's Movie","Beware of Mr. Baker","Tatsumi","Tabu","5 Broken Cameras","The Dark Knight Rises","Booker's Place: A Mississippi Story","China Heavyweight","Jiro Dreams of Sushi","Las Acacias","Neighboring Sounds","The Imposter","Gerhard Richter - Painting","The House I Live In","Two Years at Sea","Brooklyn Castle","High Ground","Chico & Rita","The Hunter","Hara-Kiri: Death of a Samurai","Flight","The Miners' Hymns","The Loneliest Planet","Patience (After Sebald)","Easy Money","Sleepless Night","Ballplayer: Pelotero","Bernie","Chasing Ice","The Invisible War","Middle of Nowhere","The Thieves","Marina Abramovic: The Artist Is Present","The Rabbi's Cat","Found Memories","Frankenweenie","The Wise Kids","Polisse","Fake It So Real","Where Are You Taking Me?","Bully","In Darkness", "Neil Young Journeys"]
+# MOVIES_2013 = ["Zero Dark Thirty", "Amour", "Almayer's Folly", "A Man Vanishes (1967)", "This Is Not a Film", "Nothing But a Man (1964)", "Elena", "The Kid with a Bike", "Gregory Crewdson: Brief Encounters", "Lincoln", "How to Survive a Plague", "Barbara", "Argo", "The Master", "Beasts of the Southern Wild", "Paradise Lost 3: Purgatory", "Holy Motors", "Moonrise Kingdom", "Oslo, August 31st","Looper","The Waiting Room","The Day He Arrives","The Flat","Monsieur Lazhar","The Deep Blue Sea","Ornette: Made in America (1985)","El Velador","In the Family","Burn","Footnote","Marley","Under African Skies","Side by Side","Once Upon a Time in Anatolia","The Trouble with the Truth","Sister","Django Unchained","Skyfall","Tchoupitoulas","Consuming Spirits","A Simple Life","Ai Weiwei: Never Sorry","Silver Linings Playbook","The Secret World of Arrietty","The Queen of Versailles","The Turin Horse","I Wish","Goodbye First Love","West of Memphis","The Sessions","Photographic Memory","The Central Park Five","Wagner's Dream","Life of Pi","Keep the Lights On","Searching for Sugar Man","The Law in These Parts","Oki's Movie","Beware of Mr. Baker","Tatsumi","Tabu","5 Broken Cameras","The Dark Knight Rises","Booker's Place: A Mississippi Story","China Heavyweight","Jiro Dreams of Sushi","Las Acacias","Neighboring Sounds","The Imposter","Gerhard Richter - Painting","The House I Live In","Two Years at Sea","Brooklyn Castle","High Ground","Chico & Rita","The Hunter","Hara-Kiri: Death of a Samurai","Flight","The Miners' Hymns","The Loneliest Planet","Patience (After Sebald)","Easy Money","Sleepless Night","Ballplayer: Pelotero","Bernie","Chasing Ice","The Invisible War","Middle of Nowhere","The Thieves","Marina Abramovic: The Artist Is Present","The Rabbi's Cat","Found Memories","Frankenweenie","The Wise Kids","Polisse","Fake It So Real","Where Are You Taking Me?","Bully","In Darkness", "Neil Young Journeys"]
+
+list = ["Forrest Gump", "Apollo 13"]
 
 # 2. POST TO FIND MOVIE
-MOVIES_2013.each do |movie|
+list.each do |movie|
   response = Unirest.post "https://byroredux-metacritic.p.mashape.com/find/movie",
     headers:{
       "X-Mashape-Key" => "#{ENV['metacritic_key']}",
@@ -24,6 +26,8 @@ MOVIES_2013.each do |movie|
       "retry" => 4,
       "title" => movie
     }
+
+
   if response.body["result"] && !Movie.find_by(:name => response.body["result"]["name"])
     new_movie = Movie.create
     new_movie.name = response.body["result"]["name"]
@@ -69,9 +73,7 @@ MOVIES_2013.each do |movie|
         critic.save
       end
     end
-
     new_movie.save
-
   end
 end
 

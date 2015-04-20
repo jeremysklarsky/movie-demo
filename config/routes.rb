@@ -14,7 +14,8 @@ Rails.application.routes.draw do
   post 'search' => 'search#create'
   
   resources :users, :except => ['new'] do 
-    resources :reviews, :only => ['new', 'create', 'update'], :controller => "users/reviews" 
+    get 'stats' => 'users#stats'
+    resources :reviews, :only => ['new', 'edit', 'create', 'update', 'index'], :controller => "users/reviews" 
 
     end
 
