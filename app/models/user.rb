@@ -17,8 +17,7 @@ class User < ActiveRecord::Base
   
   include Averageable::InstanceMethods
 
-  attr_accessor :top_critic, :bottom_critic, :avg_percentile
-
+  attr_accessor :top_critic, :bottom_critic, :avg_percentile, :reviews_by_genre
 
   def gather_critics
     critic_matcher.find_user_critics
@@ -160,7 +159,6 @@ class User < ActiveRecord::Base
   end
 
   def avg_percentile_critics(average)
-
     sql = "SELECT critics.name, COUNT(*) as review_count, AVG(score) as average 
       FROM critics 
       JOIN critic_reviews ON critics.id = critic_reviews.critic_id 
@@ -180,20 +178,16 @@ class User < ActiveRecord::Base
     else
       "This is lower than #{(1-percentile)*100}% of critics."
     end
-
   end
 
   def avg_percentile_users(average)
-
     sql = "SELECT users.name, COUNT(*) as review_count, AVG(score) as average 
       FROM users 
       JOIN user_reviews ON users.id = user_reviews.user_id 
       GROUP BY users.name 
       HAVING review_count > 10
       ORDER BY average DESC"
-
     results = ActiveRecord::Base.connection.execute(sql)
-    
     (results.select{|user|user[2]>average}.size / results.select{|user|user[2]}.size.to_f).round(1)
   end
 
@@ -204,9 +198,33 @@ class User < ActiveRecord::Base
     else
       "Your average is score than #{(1-percentile)*100}% of users."
     end
-
   end
 
+  def reviews_by_genre
+    reviews_hash = Hash.new { |h, k| h[k] = [] }
+    self.reviews.each do |review|
+      review.movie.genres.each do |genre|
+        reviews_hash[genre] << review
+      end
+    end
+    reviews_hash
+  end
+
+  def review_count_by_genre
+    count_hash = Hash.new(0)
+    reviews_by_genre.each do |genre, reviews|
+      count_hash[genre.name] = reviews.size
+    end
+    count_hash.sort_by {|_key, value| value}.reverse.to_h
+  end
+
+  def avg_score_by_genre
+    avg_scores = Hash.new(0)
+    reviews_by_genre.each do |genre, reviews|
+      avg_scores[genre.name] = (reviews.collect{|review|review.score}.inject(:+)/reviews.size.to_f).round(1)
+    end
+    avg_scores.sort_by {|_key, value| value}.reverse.to_h
+  end
 
 end
 
