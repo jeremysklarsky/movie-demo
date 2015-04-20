@@ -7,9 +7,8 @@ class MoviesController < ApplicationController
   def show
     @movie = Movie.find(params[:id])
     @user = current_user
-    if UserReview.find_by(user_id: @user.id, movie_id: @movie.id)
-      @user_review = UserReview.find_by(user_id: @user.id, movie_id: @movie.id)
-    end
+    @user_review = UserReview.find_by(user_id: @user.id, movie_id: @movie.id)
+    @critics = @user.get_relevant_critics(@movie)
   end
 
 end

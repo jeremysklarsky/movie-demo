@@ -1,0 +1,2 @@
+<p> My own rating: <%= @user_review.score %></p>
+<%= link_to "Change my review", edit_user_review_path(current_user, @user_review), class: "btn btn-primary", remote: true %>

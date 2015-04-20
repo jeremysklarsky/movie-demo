@@ -17,31 +17,31 @@ class User < ActiveRecord::Base
   include Averageable::InstanceMethods
 
 
+
+
   def gather_critics
     critic_matcher.find_user_critics
   end
 
   def get_relevant_critics(movie)
     gather_critics.select{|critic|critic.movies.include?(movie)}
-  end
-
-  def top_critic
-    critic_matcher.find_top_critic
-  end
+  end 
 
   def similarity_score(critic)
-    movies = critic_matcher.common_movies(critic)
-    scores_set = []
-    movies.each do |movie|
-     scores_set << [movie.find_review(self).score, movie.find_review(critic).score]
-   end
-   avg_difference = scores_set.collect{|set| (set[0]-set[1]).abs}.inject(:+) / movies.size.to_f
-   (100 - avg_difference).round(2)
+    
+    user_movie_ids = self.movies.collect{|movie| movie.id}
+    critic_reviews = CriticReview.where(movie_id: user_movie_ids, critic_id: critic.id ).select{|review|user_movie_ids.include?(review.movie_id)}
+    user_reviews = UserReview.where(user_id: self.id, movie_id: user_movie_ids)
+    differences = []
+    critic_reviews.each do |review|
+      differences << (review.score - user_reviews.select{|r|r.movie_id == review.movie_id}.first.score).abs
+    end
+    (100 - (differences.inject(:+) / differences.size.to_f)).round(2)
+
   end
 
   def critic_overlap(critic)
     critic_matcher.common_movies(critic).size / self.movies.size.to_f
-
   end
 
   def critic_overlap_weighted(critic)
@@ -65,13 +65,11 @@ class User < ActiveRecord::Base
       sim_score = similarity_score(critic) / 100.0
       critic_hash[critic] = {:similarity => sim_score, :overlap => overlap }
       total_overlap_points += overlap
+    # calculate total overlap points (total credits)
       total_score += (critic.get_review(movie))*overlap
     end
-  
-    # calculate total overlap points (total credits)
-
-    (total_score / total_overlap_points.to_f).round(2)
     # sum and divide (GPA)
+    (total_score / total_overlap_points.to_f).round(2)
   end
 
   def my_score(movie)
@@ -89,12 +87,16 @@ class User < ActiveRecord::Base
     gather_critics.collect{|critic|self.similarity_score(critic)}.standard_deviation.round(2)
   end
 
-  def rank_critics
-    rankings = {}
-    critic_matcher.rank_critics.each do |critic|
-      rankings[critic] = self.similarity_score(critic)
-    end
-    rankings
+  def stats_call
+    
+  end
+
+  def get_stats
+    @stats = critic_matcher.get_stats
+  end
+
+  def top_critic
+      
   end
 
   

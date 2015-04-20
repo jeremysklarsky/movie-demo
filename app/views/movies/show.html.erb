@@ -5,9 +5,12 @@
 
 <p>Metacritic's Average: <%= @movie.score %></p>
 <p>Vincent's Adjusted Score: <%= @user.adjusted_score(@movie) %></p>
+<% if !@user.movies.include?(@movie) %>
+  <p><i>Total # of critics weighed into Vincent's average:</i> <%= @critics.size %> of <%= @movie.reviews.size %> total reviews</p> 
+<% end %>
   <div id="user-review">
     <% if @user.movies.include?(@movie) %>
-      <p> My own rating: <%= @user_review.score %></p>
+      <%= render partial: 'users/reviews/rated_movie', locals: {:user => @user, :user_review => @user_review} %>
     <% else %>
       <%= render partial: 'users/reviews/rate_movie', locals: {review: UserReview.new, movie: @movie} %>  
     <% end %>  

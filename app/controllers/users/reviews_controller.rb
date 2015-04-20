@@ -12,6 +12,11 @@ class Users::ReviewsController < ApplicationController
   #     }
   #   end
   # end
+  def index
+    @user = current_user
+    @movies = @user.movies
+  end
+
 
   def create
     @user_review = UserReview.new(user_review_params)
@@ -21,11 +26,24 @@ class Users::ReviewsController < ApplicationController
   end
 
   def update
-    binding.pry
+    # binding.pry
+    @user_review = UserReview.find(params[:id])
+    @user_review.score = params[:review][:score]
+    @movie = @user_review.movie
+    @user_review.save
+    respond_to do |f|
+      f.js
+    end
   end
 
   def edit
-
+    # binding.pry
+    @user = current_user  
+    @user_review = UserReview.find(params[:id])
+    @movie = @user_review.movie
+    respond_to do |f|
+      f.js
+    end
   end
 
   private

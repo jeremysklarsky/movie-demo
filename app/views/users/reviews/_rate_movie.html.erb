@@ -1,5 +1,6 @@
-<%= form_for :review, url: user_reviews_path(@user) do |f|%>
+<%= form_for :review, url: user_reviews_path(current_user) do |f|%>
+  <%= f.hidden_field :user_id, :value => current_user.id%>
   <%= f.number_field 'score', in: 0..100 %>
-  <%= f.hidden_field :movie_id, :value => @movie.id%>
+  <%= f.hidden_field :movie_id, :value => movie.id%>
   <%= f.submit %>
 <% end %>

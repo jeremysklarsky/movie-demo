@@ -1,0 +1,8 @@
+<div class="well well-md col-md-10 col-md-offset-1">
+<h4>My reviews</h4>
+<% @movies.each do |movie| %>
+
+  <p><%= link_to movie.name, movie_path(movie)%>: <%= @user.my_score(movie) %></p>
+
+<% end %>
+</div>

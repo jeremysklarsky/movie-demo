@@ -21,6 +21,11 @@ class UsersController < ApplicationController
     @movies = current_user.movies.sort_by{|movie|movie.name}
   end
 
+  def stats
+    @critic_matcher = CriticMatcher.new(current_user)
+    @stats = @critic_matcher.critics_list
+  end
+
   private
   def user_params
     params.require(:user).permit(:name, :email, :password, :password_confirmation)

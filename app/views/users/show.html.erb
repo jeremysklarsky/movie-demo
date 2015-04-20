@@ -2,12 +2,9 @@
 
 <h3>Welcome, <%= @user.name %>!</h3>
 
-<%= link_to "Rate A Movie!", movies_path %>
+<%= link_to "Rate A Movie!", movies_path, class: "col-md-3" %>
 
+<%= link_to "My Reviews", user_reviews_path(@user), class: "col-md-3" %>
 
-<h4>My reviews</h4>
-<% @movies.each do |movie| %>
-  <p><%= movie.name %>: <%= @user.my_score(movie) %></p>
-<% end %>
-
+<%= link_to "Stats", user_stats_path(@user), class: "col-md-3" %>
 </div>

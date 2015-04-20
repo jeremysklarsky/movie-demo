@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150410024656) do
+ActiveRecord::Schema.define(version: 20150420014505) do
 
   create_table "critic_publications", force: :cascade do |t|
     t.integer  "critic_id"
@@ -70,6 +70,13 @@ ActiveRecord::Schema.define(version: 20150410024656) do
     t.string   "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "similarity_scores", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "critic_id"
+    t.float   "similarity_score"
+    t.integer "review_count"
   end
 
   create_table "user_reviews", force: :cascade do |t|
