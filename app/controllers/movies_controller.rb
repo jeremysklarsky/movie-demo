@@ -8,7 +8,11 @@ class MoviesController < ApplicationController
     @movie = Movie.find(params[:id])
     @user = current_user
     @user_review = UserReview.find_by(user_id: @user.id, movie_id: @movie.id)
-    @critics = @user.get_relevant_critics(@movie)
+    @critics = @user.get_relevant_critics(@movie) #|| @movie.critics.sample
+    @adjusted_score = @user.adjusted_score(@movie)
+    @top_critic = @critics.sort_by{|critic|@user.similarity_score(critic)}.reverse.first || @movie.critics.sample
+    @top_critic_similarity_score = @user.find_similarity_score(@top_critic) if !@user.movies.empty?
+    @featured_review = CriticReview.find_by(critic_id: @top_critic.id, movie_id:@movie.id) #|| @movie.reviews.sample
   end
 
 end

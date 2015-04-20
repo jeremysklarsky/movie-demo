@@ -1,14 +1,33 @@
-<% binding.pry %>
 <div class="well well-md col-md-10 col-md-offset-1">
 <h2>Stats</h2>
-  <div class="row">
-    <h3>My Top Critic</h3>
-    <p></p>
-  </div>
+    <h3>My Critics</h3>
+    <h4>Top Critic</h4>
+      <ul>
+        <li><%= @top_critic.name %>, from <%= @top_critic.publications.first.name %></li>
+        <li>...has a <%= @user.top_critic_similarity %>% similar taste in movies with you</li> 
+        <li>...based on <%= SimilarityScore.where(user_id: @user.id, critic_id: @top_critic.id).first.review_count %> reviews.</li>
+      </ul>
+    <h4>Bottom Critic</h4>
+      <ul>
+        <li><%= @bottom_critic.name %>, from <%= @bottom_critic.publications.first.name %></li>
+        <li>...has a <%= @user.bottom_critic_similarity %>% similar taste in movies with you</li> 
+        <li>...based on <%= SimilarityScore.where(user_id: @user.id, critic_id: @bottom_critic.id).first.review_count %> reviews.</li>
+      </ul>
 
-  <div class="row">
+  <h3>Preferences and Tendencies</h3>
+    <ul>
+      <li>You've rated <%= @user.movies.size %> movies</li>
+      <li>Your average review: <%= @user.avg_score %>. <%= @user.avg_percentile_critics_show %></li>
+      <li>The average user review is: <%= User.average_score %>. <%= @user.avg_percentile_users_show %></li>
+      <li>and the average critic review is <%= Critic.average_score %></li>
+      <h4>Movies</h4>
+        <ul>
+          <li>Top Rated Movie: <%= @top_rated_movie.name %>, Score: <%= @user.my_score(@top_rated_movie) %></li>
+          <li>Bottom Rated Movie <%= @bottom_rated_movie.name %>, Score: <%= @user.my_score(@bottom_rated_movie) %></li>
+        </ul>
+    </ul>
 
-  </div>
+
 
 
 </div>

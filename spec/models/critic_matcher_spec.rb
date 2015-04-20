@@ -5,6 +5,7 @@ RSpec.describe CriticMatcher, type: :model do
     
     @user = create(:user)
 
+
     def movie_factory
       @big_lebowski = Movie.create(:name => "The Big Lebowski", :score => 81)
       @boyhood = Movie.create(:name => "Boyhood",:score => 92) 
@@ -64,7 +65,21 @@ RSpec.describe CriticMatcher, type: :model do
       CriticReview.create(:critic_id => @andy.id, :movie_id => @prognosis.id, :publication_id => @ew.id, :score => 90)
     end
 
-    movie_factory; user_review_factory; critic_factory; publication_factory; critic_review_factory
+    def similarity_score_factory
+      critics = @user.gather_critics
+    
+      critics.each do |critic|
+      @score = SimilarityScore.new
+      @score.similarity_score = @user.similarity_score(critic)
+      @score.critic_id = critic.id
+      @score.user_id = @user.id
+      @score.review_count = @user.critic_matcher.common_movies(critic).size
+      @score.save
+    end
+
+    end
+
+    movie_factory; user_review_factory; critic_factory; publication_factory; critic_review_factory; similarity_score_factory
 
   end
 
@@ -107,7 +122,7 @@ RSpec.describe CriticMatcher, type: :model do
     end
 
     it "knows a user's top critic" do
-      expect(@user.top_critic).to eq(@ao_scott)
+      expect(@user.top_critic).to eq(@owen)
     end
 
   end

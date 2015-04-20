@@ -1,10 +1,17 @@
-<div class="well well-md col-md-10 col-md-offset-1">
+<div class="well well-md col-md-8 col-md-offset-2 text-center">
 
 <h3>Welcome, <%= @user.name %>!</h3>
 
-<%= link_to "Rate A Movie!", movies_path, class: "col-md-3" %>
+  <div class="button-row">
+    <span><%= link_to "Rate A Movie!", movies_path, class: "btn btn-primary" %></span>
+    <span><%= link_to "My Reviews", user_reviews_path(@user), class: "btn btn-primary" %></span>
+    <span><%= link_to "Stats", user_stats_path(@user), class: "btn btn-primary" %></span>
+  </div>
 
-<%= link_to "My Reviews", user_reviews_path(@user), class: "col-md-3" %>
+</div>
 
-<%= link_to "Stats", user_stats_path(@user), class: "col-md-3" %>
+
+<div class="well well-md col-md-6 col-md-offset-3 text-center">
+<h3>Random Movie Fact</h3>
+<i><%= @fact %></i>
 </div>

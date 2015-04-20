@@ -4,7 +4,7 @@
 <img src="<%= @movie.thumbnail_url %>"/><br>
 
 <p>Metacritic's Average: <%= @movie.score %></p>
-<p>Vincent's Adjusted Score: <%= @user.adjusted_score(@movie) %></p>
+<p>Vincent's Adjusted Score: <%= @adjusted_score %></p>
 <% if !@user.movies.include?(@movie) %>
   <p><i>Total # of critics weighed into Vincent's average:</i> <%= @critics.size %> of <%= @movie.reviews.size %> total reviews</p> 
 <% end %>
@@ -15,6 +15,9 @@
       <%= render partial: 'users/reviews/rate_movie', locals: {review: UserReview.new, movie: @movie} %>  
     <% end %>  
   </div>
-
-
+<h3>Featured Review</h3>
+  <p>By: <%= @featured_review.critic.name_show %>, <%= @featured_review.publication.name %> (<%= @top_critic_similarity_score %>% similarity score)</p>
+  <p>Metacritic Score:<%= @featured_review.score %>
+  <p>Excerpt: <%= @featured_review.excerpt %>
+  <p><%= link_to "Full Text of Review", @featured_review.link, :target=>"blank" %>
 </div>

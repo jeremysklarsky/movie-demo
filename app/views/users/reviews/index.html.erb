@@ -1,8 +1,11 @@
-<div class="well well-md col-md-10 col-md-offset-1">
-<h4>My reviews</h4>
-<% @movies.each do |movie| %>
+<div class="well well-md col-md-10 col-md-offset-1 text-center">
+  <h2>My reviews</h2>
+   <ul class="list-group">
+    <% @movies.each do |movie| %>
 
-  <p><%= link_to movie.name, movie_path(movie)%>: <%= @user.my_score(movie) %></p>
+      <li class="list-group-item text-center movie-card" style="margin-bottom: 3px; width: 13%; display:inline-block;"><%= link_to image_tag(movie.thumbnail_url, :height => "150px", :title=>"#{movie.name}"), movie_path(movie) %><br> 
+      <p>My Score: <%= @user.my_score(movie) %><p></li>
 
-<% end %>
+    <% end %>
+  </ul>
 </div>
