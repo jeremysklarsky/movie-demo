@@ -1,5 +1,6 @@
-<div class="well well-md col-md-10 col-md-offset-1">
-<h2>Stats</h2>
+<div class="well well-md col-md-8 col-md-offset-2">
+<h2 class="text-center">Stats</h2>
+<div class="col-md-6">
     <h3>My Critics</h3>
     <h4>Top Critic</h4>
       <ul>
@@ -13,7 +14,8 @@
         <li>...has a <%= @user.bottom_critic_similarity %>% similar taste in movies with you</li> 
         <li>...based on <%= SimilarityScore.where(user_id: @user.id, critic_id: @bottom_critic.id).first.review_count %> reviews.</li>
       </ul>
-
+</div>
+<div class="col-md-6">
   <h3>Preferences and Tendencies</h3>
     <ul>
       <li>You've rated <%= @user.movies.size %> movies</li>
@@ -26,8 +28,45 @@
           <li>Bottom Rated Movie <%= @bottom_rated_movie.name %>, Score: <%= @user.my_score(@bottom_rated_movie) %></li>
         </ul>
     </ul>
-
-
-
-
+    </div>
 </div>
+    <div class="col-md-6 col-md-offset-3" style="border: 1px solid black; padding: 1px; margin-bottom: 10px;">
+    
+          <%= column_chart ({"#{@user.name}" => @user.avg_score, "Critics" => Critic.average_score, "All Users" => User.average_score }), height: "400px",
+                min: 65, max: 90,
+                library: {
+                :title =>"Average Ratings",
+                :legend => {
+                :position => "none",
+                :color => "green"
+              }
+            } %>
+
+    </div>
+
+    <div class="col-md-8 col-md-offset-2" style="border: 1px solid black; padding: 1px;margin-bottom: 10px;">
+  
+      <%= pie_chart @user.review_count_by_genre, height: "500px", library:{
+                :title =>"#{@user.name}'s Reviews By Genre",
+                :legend => {
+                :position => "left",
+
+                }
+              }
+       %>
+
+    </div>
+
+    <div class="col-md-10 col-md-offset-1" style="border: 1px solid black; padding: 1px;">
+          <%= column_chart (@user.avg_score_by_genre),
+                min: 50, max: 100,
+                library: {
+                :title =>"#{@user.name}'s Average Rating by Genre",
+                :legend => {
+                :position => "none",
+              }
+            } %>
+  
+
+    </div>
+
