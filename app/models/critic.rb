@@ -30,7 +30,7 @@ class Critic < ActiveRecord::Base
     review = ActiveRecord::Base.connection.execute(sql).first
     
     if review 
-      review["score"] 
+      review["score"].to_i
     else
       0
     end

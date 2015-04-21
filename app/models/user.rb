@@ -62,7 +62,6 @@ class User < ActiveRecord::Base
     else
       0
     end
-
   end
 
   def critic_overlap_weighted(critic)
@@ -72,6 +71,7 @@ class User < ActiveRecord::Base
       Math.log10(critic_overlap(critic)).round(2) + 1  
     end
   end
+
 
   def adjusted_score(movie)
     # {critic => similarity_score}
