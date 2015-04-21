@@ -93,7 +93,7 @@ class User < ActiveRecord::Base
       critic_hash[critic] = {:similarity => sim_score, :overlap => overlap }
       total_overlap_points += overlap
     # calculate total overlap points (total credits)
-      total_score += (critic.get_review(movie))*overlap
+      total_score += (critic.get_review(movie))*overlap if critic.get_review(movie)
     end
     # sum and divide (GPA)
     score = (total_score / total_overlap_points.to_f).round(2)
@@ -156,16 +156,6 @@ class User < ActiveRecord::Base
     result = ActiveRecord::Base.connection.execute(sql)
     result.first[0].round(2)
   end
-
-  # def update_similarity_score(critic, critic_review, user_review)
-  #   @similarity_score = self.similarity_scores.find_by(:critic_id => critic.id)
-  #   new_value = (critic_review.score - user_review.score).abs
-  #   total_values = @similarity_score.similarity_score * @similarity_score.review_count
-  #   @similarity_score.review_count += 1
-  #   total_values += new_value
-  #   @similarity_score.similarity_score = total_values / @similarity_score.review_count
-  #   @similarity_score.save
-  # end
 
   def avg_percentile_critics(average)
     sql = "SELECT critics.name, COUNT(*) as review_count, AVG(score) as average 

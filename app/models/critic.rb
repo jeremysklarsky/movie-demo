@@ -28,7 +28,12 @@ class Critic < ActiveRecord::Base
     sql = "SELECT * FROM critic_reviews WHERE critic_reviews.critic_id = #{self.id} AND critic_reviews.movie_id = #{movie.id}"
 
     review = ActiveRecord::Base.connection.execute(sql).first
-    review["score"] if review
+    
+    if review 
+      review["score"] 
+    else
+      0
+    end
   end
 
   def self.average_score
