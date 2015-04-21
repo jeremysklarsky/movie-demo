@@ -4,13 +4,13 @@
     <h3>My Critics</h3>
     <h4>Top Critic</h4>
       <ul>
-        <li><%= @top_critic.name %>, from <%= @top_critic.publications.first.name %></li>
+        <li><%= link_to @top_critic.name, critic_path(@top_critic) %>, from <%= @top_critic.publications.first.name %></li>
         <li>...has a <%= @user.top_critic_similarity %>% similar taste in movies with you</li> 
         <li>...based on <%= SimilarityScore.where(user_id: @user.id, critic_id: @top_critic.id).first.review_count %> reviews.</li>
       </ul>
     <h4>Bottom Critic</h4>
       <ul>
-        <li><%= @bottom_critic.name %>, from <%= @bottom_critic.publications.first.name %></li>
+        <li><%= link_to @bottom_critic.name, critic_path(@bottom_critic) %>, from <%= @bottom_critic.publications.first.name %></li>
         <li>...has a <%= @user.bottom_critic_similarity %>% similar taste in movies with you</li> 
         <li>...based on <%= SimilarityScore.where(user_id: @user.id, critic_id: @bottom_critic.id).first.review_count %> reviews.</li>
       </ul>
