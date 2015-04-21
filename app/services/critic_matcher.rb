@@ -19,8 +19,7 @@ class CriticMatcher
     movies.collect{|movie|movie.critics}.flatten.uniq.each do |critic|
       all_stats_hash[critic] = {:name => (critic.name || critic.publications.first.name), :similarity_score => @user.similarity_score(critic), :common_reviews => common_movies(critic).size, :overlap => @user.critic_overlap(critic) }
     end
-    all_stats_hash
-    
+    all_stats_hash    
   end
 
   def critics_list  

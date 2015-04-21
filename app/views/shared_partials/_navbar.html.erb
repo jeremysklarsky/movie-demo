@@ -8,6 +8,7 @@
       <% if current_user %>
         <li ><%= link_to "My Dashboard", user_path(current_user) %></li>
         <li ><%= link_to "Movies", movies_path %></li>
+        <li ><%= link_to "Critics", critics_path %></li>
         <li class="logOutButton"><%= link_to "Log Out", logout_path %></li>
       <%else%>
         <li><%= link_to "Log In", login_path %></li><li><%= link_to "Sign Up", signup_path %></li>

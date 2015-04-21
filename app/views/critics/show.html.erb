@@ -1,0 +1,63 @@
+<div class="well well-md col-md-6 col-md-offset-3 text-center">
+
+  <h2><%= @critic.name %></h2>
+
+  <ul class="pub-list">
+  <% @critic.publications.each do |pub| %>
+  <li><h3><%= pub.name %></h3></li>
+  <% end %>
+  </ul>
+
+  <p>Average Score: <%= @critic.avg_score %> (compared to <%= Critic.average_score %> for the average critic)</p>
+  <% if @similarity_score %>
+    <p>You have <%= @similarity_score %>% similar taste in movies with <%= @critic.name %></p>
+
+    <p><%= @critic.name %> has reviewed <%= @review_count %> of the same movies as you (<%= ((@review_count / current_user.movies.size.to_f ) * 100).round(1) %>%)</p> 
+  <% else %>
+    <p>You have rated no movies in common, so Vincent doesn't really know what to make of it. Either you or <%= @critic.name %> needs to review some more films.</p>
+
+  <% end %>
+</div>
+  
+
+<div class="well well-md col-md-8 col-md-offset-2">  
+  <ul class="list-group">
+    <h3 class="text-center">Recent Reviews</h3>
+    <% @recent_reviews.each do |r| %>
+    <li class="list-group-item list-group-item-reviews" style="display: inline-block; width: 33%;">
+      <h3><%= r.movie.name %></h3>
+      <p><b><%= r.publication.name %></b></p>
+      <p>Released <%= r.movie.release_date.strftime("%B %d, %Y") %></p>
+      <p><%= r.truncated_excerpt %></p>
+      <p>Score: <%= r.score %></p>
+      <p><%= link_to "Full Text", r.link, :target => "blank" %></p>
+    </li>
+    <% end %>
+  </ul>  
+</div>
+
+<div class="col-md-8 col-md-offset-2" style="border: 1px solid black; padding: 1px;margin-bottom: 10px;">
+
+  <%= pie_chart @critic.review_count_by_genre, height: "500px", library:{
+            :title =>"#{@critic.name}'s Reviews By Genre",
+            :legend => {
+            :position => "left",
+
+            }
+          }
+   %>
+
+</div>
+
+<div class="col-md-10 col-md-offset-1" style="border: 1px solid black; padding: 1px;margin-bottom: 10px;">
+      <%= bar_chart @critic.avg_score_by_genre, height: "600px",
+            min: 0, max: 100,
+            library: {
+            :title =>"#{@critic.name}'s Average Rating by Genre",
+            :legend => {
+            :position => "none",
+          }
+        } %>
+
+
+</div>

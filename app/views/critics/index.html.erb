@@ -1,0 +1,9 @@
+<div class="well well-md col-md-10 col-md-offset-1">
+  <h2 class="text-center">All the Critics</h2>
+    <ul class="list-group text-center">
+    <% @critics.each do |critic| %>
+      <li class="list-group-item text-center critic-card" style="display: inline-block; width:20%; margin-bottom: 3px;"><%= link_to critic.name, critic_path(critic) %>
+      </li>
+    <% end %>
+    </ul>
+</div>

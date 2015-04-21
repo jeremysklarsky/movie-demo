@@ -2,7 +2,6 @@ class UsersController < ApplicationController
 
     before_action :set_user, only: [:show]
 
-
   def new
     @user = User.new
   end
@@ -29,10 +28,6 @@ class UsersController < ApplicationController
     @user_reviews = @user.reviews
     @top_rated_movie = @user.top_rated_movie
     @bottom_rated_movie = @user.bottom_rated_movie
-
-    # @diff = (User.average_score - @user.avg_score).abs
-    # @avg = (User.average_score + @user.avg_score)/2
-
 
   end
 

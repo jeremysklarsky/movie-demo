@@ -17,7 +17,7 @@
     </div></li>
    <li class="list-group-item movie-card movie-card-show text-left" style="display: inline-block; width: 42%; height: 90%; vertical-align:middle;";> 
   <h3>Featured Review</h3>
-    <p>By: <%= @featured_review.critic.name_show %>, <%= @featured_review.publication.name %> (<%= @top_critic_similarity_score %>% similarity score)</p>
+    <p>By: <%= link_to @featured_review.critic.name_show, critic_path(@featured_review.critic) %>, <%= @featured_review.publication.name %> (<%= @top_critic_similarity_score %>% similarity score)</p>
     <p>Metacritic Score: <%= @featured_review.score %></p>
     <p>Excerpt: <%= @featured_review.excerpt %></p>
     <p><%= link_to "Full Text of Review", @featured_review.link, :target=>"blank" %></p>

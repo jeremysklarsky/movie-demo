@@ -46,6 +46,13 @@ class User < ActiveRecord::Base
     end
   end 
 
+  def get_review_count(critic)
+    sim_score = SimilarityScore.where(user_id: self.id, critic_id: critic.id)
+    if !sim_score.empty?
+      sim_score.first.review_count
+    end
+  end
+
   def critic_overlap(critic)
     @sim_score = SimilarityScore.where(critic_id: critic.id, user_id: self.id)
     if !@sim_score.empty?
@@ -148,15 +155,15 @@ class User < ActiveRecord::Base
     result.first[0].round(2)
   end
 
-  def update_similarity_score(critic, critic_review, user_review)
-    @similarity_score = self.similarity_scores.find_by(:critic_id => critic.id)
-    new_value = (critic_review.score - user_review.score).abs
-    total_values = @similarity_score.similarity_score * @similarity_score.review_count
-    @similarity_score.review_count += 1
-    total_values += new_value
-    @similarity_score.similarity_score = total_values / @similarity_score.review_count
-    @similarity_score.save
-  end
+  # def update_similarity_score(critic, critic_review, user_review)
+  #   @similarity_score = self.similarity_scores.find_by(:critic_id => critic.id)
+  #   new_value = (critic_review.score - user_review.score).abs
+  #   total_values = @similarity_score.similarity_score * @similarity_score.review_count
+  #   @similarity_score.review_count += 1
+  #   total_values += new_value
+  #   @similarity_score.similarity_score = total_values / @similarity_score.review_count
+  #   @similarity_score.save
+  # end
 
   def avg_percentile_critics(average)
     sql = "SELECT critics.name, COUNT(*) as review_count, AVG(score) as average 
