@@ -34,7 +34,7 @@ class Users::ReviewsController < ApplicationController
       @score.save
     end
 
-    redirect_to '/'
+    redirect_to user_reviews_path(@user)
   end
 
   def update
