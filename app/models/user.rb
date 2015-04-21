@@ -40,9 +40,11 @@ class User < ActiveRecord::Base
   end
 
   def find_similarity_score(critic)
-    @sim_score = SimilarityScore.where(user_id: self.id, critic_id: critic.id)
-    if !@sim_score.empty?
-      @sim_score.first.similarity_score
+    if critic
+      @sim_score = SimilarityScore.where(user_id: self.id, critic_id: critic.id) 
+      if !@sim_score.empty?
+        @sim_score.first.similarity_score
+      end
     end
   end 
 
@@ -222,7 +224,7 @@ class User < ActiveRecord::Base
     reviews_by_genre.each do |genre, reviews|
       count_hash[genre.name] = reviews.size
     end
-    count_hash.sort_by {|_key, value| value}.reverse.to_h
+    count_hash.sort_by {|key, value| value}.reverse.to_h
   end
 
   def avg_score_by_genre
@@ -230,7 +232,7 @@ class User < ActiveRecord::Base
     reviews_by_genre.each do |genre, reviews|
       avg_scores[genre.name] = (reviews.collect{|review|review.score}.inject(:+)/reviews.size.to_f).round(1)
     end
-    avg_scores.sort_by {|_key, value| value}.reverse.to_h
+    avg_scores.sort_by {|key, value| value}.reverse.to_h
   end
 
 end

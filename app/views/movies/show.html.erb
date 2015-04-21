@@ -3,9 +3,10 @@
     <li class="list-group-item movie-card movie-card-show" style="display: inline-block; width: 42%; height: 90%; vertical-align:middle;";> <h2><%= @movie.name %></h2>
     <img src="<%= @movie.thumbnail_url %>"/><br>
 
-    <p>Metacritic's Average: <%= @movie.score %></p>
-    <p>Vincent's Adjusted Score: <%= @adjusted_score %></p>
+    <p>Metacritic's Score: <%= @movie.score %></p>
+    <p>Vincent's Personalized Score: <%= @adjusted_score %></p>
     <% if !@user.movies.include?(@movie) %>
+      <p><%= Movie.recommendation(@adjusted_score) %></p>
       <p><i>Total # of critics weighed into Vincent's average:</i><br> <%= @critics.size %> of <%= @movie.reviews.size %> total reviews</p> 
     <% end %>
       <div id="user-review">
@@ -17,10 +18,14 @@
       </div></li>
      <li class="list-group-item movie-card movie-card-show text-left" style="display: inline-block; width: 42%; height: 90%; vertical-align:middle;";> 
     <h3>Featured Review</h3>
+    <% if @featured_review %>
       <p>By: <%= link_to @featured_review.critic.name_show, critic_path(@featured_review.critic) %>, <%= @featured_review.publication.name %> (<%= @top_critic_similarity_score %>% similarity score)</p>
       <p>Metacritic Score: <%= @featured_review.score %></p>
       <p>Excerpt: <%= @featured_review.excerpt %></p>
       <p><%= link_to "Full Text of Review", @featured_review.link, :target=>"blank" %></p>
+    <% else %>
+      <p>No featured reviews for this movie. Sowwy!</p>
+      <% end %>
       </li>
   </ul>    
 </div>

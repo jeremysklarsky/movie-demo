@@ -46,5 +46,22 @@ class Movie < ActiveRecord::Base
     end
   end
 
+  def self.recommendation(score)
+    if score == 100
+      "Vincent thinks this is the best movie you've ever seen."
+    elsif (score >= 95 ) && (score < 100)
+      "Vincent thinks you will really, really like this movie."
+    elsif (score > 90 )&& (score < 95) 
+      "Vincent thinks you will really like this movie."
+    elsif (score > 80 )&& (score <= 90)
+      "Vincent thinks you will probably like this movie."
+    elsif (score > 70 )&& (score <= 80)
+      "Vincent isn't sure - you might like it, you might not."
+    elsif (score > 60 )&& (score <= 70)
+      "Vincent's pretty sure this movie is a waste of your time."
+    else
+      "Vincent is 100% you are going to HATE this movie with the passion of a thousand fiery suns."
+    end
+  end
 
 end

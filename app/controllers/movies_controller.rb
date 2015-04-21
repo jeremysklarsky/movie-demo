@@ -12,7 +12,7 @@ class MoviesController < ApplicationController
     @adjusted_score = @user.adjusted_score(@movie)
     @top_critic = @critics.sort_by{|critic|@user.similarity_score(critic)}.reverse.first || @movie.critics.sample
     @top_critic_similarity_score = @user.find_similarity_score(@top_critic) if !@user.movies.empty?
-    @featured_review = CriticReview.find_by(critic_id: @top_critic.id, movie_id:@movie.id) #|| @movie.reviews.sample
+    @featured_review = CriticReview.find_by(critic_id: @top_critic.id, movie_id:@movie.id) if @top_critic
   end
 
 end

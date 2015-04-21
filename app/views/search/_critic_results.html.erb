@@ -1,0 +1,6 @@
+SEARCH RESULTS
+<ol>
+<% critics.each do |critic|  %>
+  <li><%= link_to critic.name, critic_path(critic) %></li><br>
+<% end %>
+</ol>

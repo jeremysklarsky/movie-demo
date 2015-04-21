@@ -59,7 +59,7 @@
 
     <div class="col-md-10 col-md-offset-1" style="border: 1px solid black; padding: 1px;">
           <%= bar_chart (@user.avg_score_by_genre), height: "500px",
-                min: 0, max: 100,
+                min: 25, max: 100,
                 library: {
                 :title =>"#{@user.name}'s Average Rating by Genre",
                 :legend => {
