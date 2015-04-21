@@ -31,6 +31,8 @@ class Critic < ActiveRecord::Base
     
     if review 
       review["score"] 
+    else
+      0
     end
   end
 
