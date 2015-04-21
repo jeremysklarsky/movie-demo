@@ -23,12 +23,13 @@ class UsersController < ApplicationController
 
   def stats
     @user = current_user
-    @top_critic = @user.top_critic
-    @bottom_critic = @user.bottom_critic
-    @user_reviews = @user.reviews
-    @top_rated_movie = @user.top_rated_movie
-    @bottom_rated_movie = @user.bottom_rated_movie
-
+    if @user.movies.size > 0
+      @top_critic = @user.top_critic
+      @bottom_critic = @user.bottom_critic
+      @user_reviews = @user.reviews
+      @top_rated_movie = @user.top_rated_movie
+      @bottom_rated_movie = @user.bottom_rated_movie
+    end
   end
 
   private

@@ -1,72 +1,79 @@
 <div class="well well-md col-md-8 col-md-offset-2">
 <h2 class="text-center">Stats</h2>
-<div class="col-md-6">
-    <h3>My Critics</h3>
-    <h4>Top Critic</h4>
-      <ul>
-        <li><%= link_to @top_critic.name, critic_path(@top_critic) %>, from <%= @top_critic.publications.first.name %></li>
-        <li>...has a <%= @user.top_critic_similarity %>% similar taste in movies with you</li> 
-        <li>...based on <%= SimilarityScore.where(user_id: @user.id, critic_id: @top_critic.id).first.review_count %> reviews.</li>
-      </ul>
-    <h4>Bottom Critic</h4>
-      <ul>
-        <li><%= link_to @bottom_critic.name, critic_path(@bottom_critic) %>, from <%= @bottom_critic.publications.first.name %></li>
-        <li>...has a <%= @user.bottom_critic_similarity %>% similar taste in movies with you</li> 
-        <li>...based on <%= SimilarityScore.where(user_id: @user.id, critic_id: @bottom_critic.id).first.review_count %> reviews.</li>
-      </ul>
-</div>
-<div class="col-md-6">
-  <h3>Preferences and Tendencies</h3>
-    <ul>
-      <li>You've rated <%= @user.movies.size %> movies</li>
-      <li>An average critic's review is <%= Critic.average_score %>. Your average review is <%= @user.avg_score %>. <%= @user.avg_percentile_critics_show %></li>
-      <li>The average user review is: <%= User.average_score %>. <%= @user.avg_percentile_users_show %></li>
-      <li>and the average critic review is </li>
-      <h4>Movies</h4>
+<% if @user.movies.size > 0 %>
+  <div class="col-md-6">
+      <h3>My Critics</h3>
+      <h4>Top Critic</h4>
         <ul>
-          <li>Top Rated Movie: <%= @top_rated_movie.name %>, Score: <%= @user.my_score(@top_rated_movie) %></li>
-          <li>Bottom Rated Movie <%= @bottom_rated_movie.name %>, Score: <%= @user.my_score(@bottom_rated_movie) %></li>
+          <li><%= link_to @top_critic.name, critic_path(@top_critic) %>, from <%= @top_critic.publications.first.name %></li>
+          <li>...has a <%= @user.top_critic_similarity %>% similar taste in movies with you</li> 
+          <li>...based on <%= SimilarityScore.where(user_id: @user.id, critic_id: @top_critic.id).first.review_count %> reviews.</li>
         </ul>
-    </ul>
-    </div>
-</div>
-    <div class="col-md-6 col-md-offset-3" style="border: 1px solid black; padding: 1px; margin-bottom: 10px;">
-    
-          <%= column_chart ({"#{@user.name}" => @user.avg_score, "Critics" => Critic.average_score, "All Users" => User.average_score }), height: "400px",
-                min: 65, max: 90,
-                library: {
-                :title =>"Average Ratings",
-                :legend => {
-                :position => "none",
-                :color => "green"
-              }
-            } %>
-
-    </div>
-
-    <div class="col-md-8 col-md-offset-2" style="border: 1px solid black; padding: 1px;margin-bottom: 10px;">
-  
-      <%= pie_chart @user.review_count_by_genre, height: "500px", library:{
-                :title =>"#{@user.name}'s Reviews By Genre",
-                :legend => {
-                :position => "left",
-
+      <h4>Bottom Critic</h4>
+        <ul>
+          <li><%= link_to @bottom_critic.name, critic_path(@bottom_critic) %>, from <%= @bottom_critic.publications.first.name %></li>
+          <li>...has a <%= @user.bottom_critic_similarity %>% similar taste in movies with you</li> 
+          <li>...based on <%= SimilarityScore.where(user_id: @user.id, critic_id: @bottom_critic.id).first.review_count %> reviews.</li>
+        </ul>
+  </div>
+  <div class="col-md-6">
+    <h3>Preferences and Tendencies</h3>
+      <ul>
+        <li>You've rated <%= @user.movies.size %> movies</li>
+        <li>An average critic's review is <%= Critic.average_score %>. Your average review is <%= @user.avg_score %>. <%= @user.avg_percentile_critics_show %></li>
+        <li>The average user review is: <%= User.average_score %>. <%= @user.avg_percentile_users_show %></li>
+        <li>and the average critic review is </li>
+        <h4>Movies</h4>
+          <ul>
+            <li>Top Rated Movie: <%= @top_rated_movie.name %>, Score: <%= @user.my_score(@top_rated_movie) %></li>
+            <li>Bottom Rated Movie <%= @bottom_rated_movie.name %>, Score: <%= @user.my_score(@bottom_rated_movie) %></li>
+          </ul>
+      </ul>
+      </div>
+  </div>
+      <div class="col-md-6 col-md-offset-3" style="border: 1px solid black; padding: 1px; margin-bottom: 10px;">
+      
+            <%= column_chart ({"#{@user.name}" => @user.avg_score, "Critics" => Critic.average_score, "All Users" => User.average_score }), height: "400px",
+                  min: 65, max: 90,
+                  library: {
+                  :title =>"Average Ratings",
+                  :legend => {
+                  :position => "none",
+                  :color => "green"
                 }
-              }
-       %>
+              } %>
 
+      </div>
+
+      <div class="col-md-8 col-md-offset-2" style="border: 1px solid black; padding: 1px;margin-bottom: 10px;">
+    
+        <%= pie_chart @user.review_count_by_genre, height: "500px", library:{
+                  :title =>"#{@user.name}'s Reviews By Genre",
+                  :legend => {
+                  :position => "left",
+
+                  }
+                }
+         %>
+
+      </div>
+
+      <div class="col-md-10 col-md-offset-1" style="border: 1px solid black; padding: 1px;">
+            <%= bar_chart (@user.avg_score_by_genre), height: "500px",
+                  min: 25, max: 100,
+                  library: {
+                  :title =>"#{@user.name}'s Average Rating by Genre",
+                  :legend => {
+                  :position => "none",
+                }
+              } %>
+    
+
+      </div>
+<% else %>
+    <p>You've rated no movies. There are no stats to display. Rate some movies!</p>
+      <div class="button-row">
+    <span><%= link_to "Rate A Movie!", movies_path, class: "btn btn-primary" %></span>
     </div>
-
-    <div class="col-md-10 col-md-offset-1" style="border: 1px solid black; padding: 1px;">
-          <%= bar_chart (@user.avg_score_by_genre), height: "500px",
-                min: 25, max: 100,
-                library: {
-                :title =>"#{@user.name}'s Average Rating by Genre",
-                :legend => {
-                :position => "none",
-              }
-            } %>
   
-
-    </div>
-
+<% end %>
