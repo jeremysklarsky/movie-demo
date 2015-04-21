@@ -12,6 +12,7 @@ Rails.application.routes.draw do
   resources :movies, :only => ['show', 'index']
   get 'search' => 'search#new', :as => 'search'
   post 'search' => 'search#create'
+  post 'critic_search' => 'search#critics'
   
   resources :users, :except => ['new'] do 
     get 'stats' => 'users#stats'

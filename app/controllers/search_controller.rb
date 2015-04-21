@@ -16,4 +16,13 @@ class SearchController < ApplicationController
 
   end
 
+  def critics
+    @critics = Critic.where("name like ?", "%#{params[:query]}%")
+
+    respond_to do |f|
+      f.js
+    end
+
+  end
+
 end

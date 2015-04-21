@@ -1,4 +1,15 @@
 <div class="well well-md col-md-10 col-md-offset-1">
+
+<form id="movie-search-form", method="POST", action="critic_search", data-remote="true">
+  
+  <input name="authenticity_token" type="hidden" value="token_value">
+  
+  Why don't you just tell me the name of the critic to search for?<br>
+  <input type="text" name="query" id="search-bar"/>
+  <input type="Submit"/>
+</form>
+
+<div id="search-results"></div>
   <h2 class="text-center">All the Critics</h2>
     <ul class="list-group text-center">
     <% @critics.each do |critic| %>
