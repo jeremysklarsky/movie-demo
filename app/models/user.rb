@@ -154,7 +154,7 @@ class User < ActiveRecord::Base
   def self.average_score
     sql = "select avg(score) from user_reviews"
     result = ActiveRecord::Base.connection.execute(sql)
-    result.first["avg"].to_f
+    result.first["avg"].to_f.round(2)
   end
 
   def avg_percentile_critics(average)
