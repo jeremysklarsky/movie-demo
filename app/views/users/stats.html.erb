@@ -5,15 +5,24 @@
       <h3>My Critics</h3>
       <h4>Top Critic</h4>
         <ul>
+    <% if @top_critic %>
           <li><%= link_to @top_critic.name, critic_path(@top_critic) %>, from <%= @top_critic.publications.first.name %></li>
           <li>...has a <%= @user.top_critic_similarity %>% similar taste in movies with you</li> 
           <li>...based on <%= SimilarityScore.where(user_id: @user.id, critic_id: @top_critic.id).first.review_count %> reviews.</li>
+    <% else %>
+          <li>You need to rate more movies for Vincent to figure out who your top critic is</li>
+    <% end %>
         </ul>
+
       <h4>Bottom Critic</h4>
         <ul>
+    <% if @bottom_critic %>
           <li><%= link_to @bottom_critic.name, critic_path(@bottom_critic) %>, from <%= @bottom_critic.publications.first.name %></li>
           <li>...has a <%= @user.bottom_critic_similarity %>% similar taste in movies with you</li> 
           <li>...based on <%= SimilarityScore.where(user_id: @user.id, critic_id: @bottom_critic.id).first.review_count %> reviews.</li>
+    <% else %>
+          <li>You need to rate more movies for Vincent to figure out who your top critic is</li>
+    <% end %>  
         </ul>
   </div>
   <div class="col-md-6">

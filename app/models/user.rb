@@ -124,11 +124,11 @@ class User < ActiveRecord::Base
   end
 
   def top_critic
-    Critic.find(SimilarityScore.where(user_id: self.id).sort_by{|sim|sim.similarity_score}.reject{|r|r.review_count < 4 }.reverse.first.critic_id)
+    Critic.find(SimilarityScore.where(user_id: self.id).sort_by{|sim|sim.similarity_score}.reject{|r|r.review_count < 2 }.reverse.first.critic_id)
   end
 
   def bottom_critic
-    Critic.find(SimilarityScore.where(user_id: self.id).sort_by{|sim|sim.similarity_score}.reject{|r|r.review_count < 5 }.first.critic_id)
+    Critic.find(SimilarityScore.where(user_id: self.id).sort_by{|sim|sim.similarity_score}.reject{|r|r.review_count < 2 }.first.critic_id)
   end
 
   def top_rated_movie

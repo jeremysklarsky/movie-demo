@@ -24,8 +24,8 @@ class UsersController < ApplicationController
   def stats
     @user = current_user
     if @user.movies.size > 5
-      @top_critic = @user.top_critic
-      @bottom_critic = @user.bottom_critic
+      @top_critic = @user.top_critic if @user.top_critic
+      @bottom_critic = @user.bottom_critic if @user.bottom_critic
       @user_reviews = @user.reviews
       @top_rated_movie = @user.top_rated_movie
       @bottom_rated_movie = @user.bottom_rated_movie
