@@ -5,7 +5,7 @@ class SearchController < ApplicationController
   end
 
   def create
-    @movies = Movie.where("name like ?", "%#{params[:query]}%")
+    @movies = Movie.where("lower(name) like ?", "%#{params[:query]}%")
 
     respond_to do |f|
       f.js
@@ -17,7 +17,7 @@ class SearchController < ApplicationController
   end
 
   def critics
-    @critics = Critic.where("name like ?", "%#{params[:query]}%")
+    @critics = Critic.where("lower(name) like ?", "%#{params[:query]}%")
 
     respond_to do |f|
       f.js
