@@ -167,7 +167,7 @@ class User < ActiveRecord::Base
 
     results = ActiveRecord::Base.connection.execute(sql)
     
-    (results.select{|critic|critic["average"]>average}.size / results.select{|critic|critic["average"]}.size.to_f).round(1)
+    (results.select{|critic|critic["average"].to_i> average.to_i }.size / results.select{|critic|critic["average"].to_i}.size.to_f).round(1)
   end
 
   def avg_percentile_critics_show
@@ -187,7 +187,7 @@ class User < ActiveRecord::Base
       HAVING COUNT(*) > 8
       ORDER BY average DESC"
     results = ActiveRecord::Base.connection.execute(sql)
-    (results.select{|user|user["average"]>average}.size / results.select{|user|user["average"]}.size.to_f).round(1)
+    (results.select{|user|user["average"].to_i> average.to_i }.size / results.select{|user|user["average"].to_i}.size.to_f).round(1)
   end
 
   def avg_percentile_users_show
@@ -230,3 +230,4 @@ end
 
 
 
+  
