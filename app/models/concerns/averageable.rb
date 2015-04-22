@@ -8,7 +8,7 @@ module Averageable
       FROM #{my_class}s 
       JOIN critic_reviews ON #{my_class}s.id = critic_reviews.#{my_class}_id 
       GROUP BY #{my_class}s.name 
-      HAVING review_count > 10 
+      HAVING COUNT(*) > 8 
       ORDER BY average DESC" 
     
     result = ActiveRecord::Base.connection.execute(sql)

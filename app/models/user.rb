@@ -154,20 +154,20 @@ class User < ActiveRecord::Base
   def self.average_score
     sql = "select avg(score) from user_reviews"
     result = ActiveRecord::Base.connection.execute(sql)
-    result.first[0].round(2)
+    result.first["avg"].to_f
   end
 
   def avg_percentile_critics(average)
-    sql = "SELECT critics.name, COUNT(*) as review_count, AVG(score) as average 
+    sql = "SELECT critics.name, COUNT(*) AS review_count, AVG(score) AS average 
       FROM critics 
       JOIN critic_reviews ON critics.id = critic_reviews.critic_id 
       GROUP BY critics.name 
-      HAVING review_count > 10
-      ORDER BY average DESC"
+      HAVING COUNT(*) > 5
+      ORDER BY average DESC;"
 
     results = ActiveRecord::Base.connection.execute(sql)
     
-    (results.select{|critic|critic[2]>average}.size / results.select{|critic|critic[2]}.size.to_f).round(1)
+    (results.select{|critic|critic["average"]>average}.size / results.select{|critic|critic["average"]}.size.to_f).round(1)
   end
 
   def avg_percentile_critics_show
@@ -184,10 +184,10 @@ class User < ActiveRecord::Base
       FROM users 
       JOIN user_reviews ON users.id = user_reviews.user_id 
       GROUP BY users.name 
-      HAVING review_count > 10
+      HAVING COUNT(*) > 8
       ORDER BY average DESC"
     results = ActiveRecord::Base.connection.execute(sql)
-    (results.select{|user|user[2]>average}.size / results.select{|user|user[2]}.size.to_f).round(1)
+    (results.select{|user|user["average"]>average}.size / results.select{|user|user["average"]}.size.to_f).round(1)
   end
 
   def avg_percentile_users_show
