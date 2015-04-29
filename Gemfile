@@ -7,6 +7,7 @@ gem 'metacritic', :git => "https://github.com/jeremysklarsky/metacritic"
 gem 'rails4-autocomplete'
 gem 'descriptive_statistics'
 gem 'chartkick'
+gem 'friendly_id', '~> 5.1.0'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.0'
 # Use SCSS for stylesheets
