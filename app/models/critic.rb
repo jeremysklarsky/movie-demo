@@ -37,9 +37,7 @@ class Critic < ActiveRecord::Base
   end
 
   def self.average_score
-    sql = "select avg(score) from critic_reviews"
-    result = ActiveRecord::Base.connection.execute(sql)
-    result.first["avg"].to_f.round(2)
+    CriticReview.average("score").to_f.round(2)
   end
 
   def recent_reviews
