@@ -15,9 +15,5 @@ class UserReview < ActiveRecord::Base
       score.review_count = user.critic_matcher.common_movies(critic).size
       score.save
     end
-
-
   end
-
-
 end
