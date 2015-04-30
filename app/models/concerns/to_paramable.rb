@@ -5,7 +5,7 @@ module ToParamable
   end
 
   def slugify
-    self.slug = self.name.gsub(".", "").downcase.gsub(" ", "-")
+    self.slug = self.name.gsub(".", "").gsub(" ", "-").downcase
   end
 
 end

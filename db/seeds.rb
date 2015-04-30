@@ -12,10 +12,11 @@
 # list =["Best Kept Secret", "12 Years a Slave"]
 # MOVIES_2013 = ["Zero Dark Thirty", "Amour", "Almayer's Folly", "A Man Vanishes (1967)", "This Is Not a Film", "Nothing But a Man (1964)", "Elena", "The Kid with a Bike", "Gregory Crewdson: Brief Encounters", "Lincoln", "How to Survive a Plague", "Barbara", "Argo", "The Master", "Beasts of the Southern Wild", "Paradise Lost 3: Purgatory", "Holy Motors", "Moonrise Kingdom", "Oslo, August 31st","Looper","The Waiting Room","The Day He Arrives","The Flat","Monsieur Lazhar","The Deep Blue Sea","Ornette: Made in America (1985)","El Velador","In the Family","Burn","Footnote","Marley","Under African Skies","Side by Side","Once Upon a Time in Anatolia","The Trouble with the Truth","Sister","Django Unchained","Skyfall","Tchoupitoulas","Consuming Spirits","A Simple Life","Ai Weiwei: Never Sorry","Silver Linings Playbook","The Secret World of Arrietty","The Queen of Versailles","The Turin Horse","I Wish","Goodbye First Love","West of Memphis","The Sessions","Photographic Memory","The Central Park Five","Wagner's Dream","Life of Pi","Keep the Lights On","Searching for Sugar Man","The Law in These Parts","Oki's Movie","Beware of Mr. Baker","Tatsumi","Tabu","5 Broken Cameras","The Dark Knight Rises","Booker's Place: A Mississippi Story","China Heavyweight","Jiro Dreams of Sushi","Las Acacias","Neighboring Sounds","The Imposter","Gerhard Richter - Painting","The House I Live In","Two Years at Sea","Brooklyn Castle","High Ground","Chico & Rita","The Hunter","Hara-Kiri: Death of a Samurai","Flight","The Miners' Hymns","The Loneliest Planet","Patience (After Sebald)","Easy Money","Sleepless Night","Ballplayer: Pelotero","Bernie","Chasing Ice","The Invisible War","Middle of Nowhere","The Thieves","Marina Abramovic: The Artist Is Present","The Rabbi's Cat","Found Memories","Frankenweenie","The Wise Kids","Polisse","Fake It So Real","Where Are You Taking Me?","Bully","In Darkness", "Neil Young Journeys"]
 
-list = ["Forrest Gump", "Apollo 13"]
+list = ["Avengers: Age of Ultron"]
 
 # 2. POST TO FIND MOVIE
 list.each do |movie|
+
   response = Unirest.post "https://byroredux-metacritic.p.mashape.com/find/movie",
     headers:{
       "X-Mashape-Key" => "#{ENV['metacritic_key']}",
@@ -24,12 +25,12 @@ list.each do |movie|
     },
     parameters:{
       "retry" => 4,
-      "title" => movie
+      "title" => "Avengers: Age of Ultron"
     }
 
 
   if response.body["result"] && !Movie.find_by(:name => response.body["result"]["name"])
-    new_movie = Movie.create
+    new_movie = Movie.new
     new_movie.name = response.body["result"]["name"]
     new_movie.score = response.body["result"]["score"].to_i
     new_movie.release_date = response.body["result"]["rlsdate"]
