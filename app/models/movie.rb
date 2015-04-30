@@ -1,4 +1,7 @@
 class Movie < ActiveRecord::Base
+  include Averageable::InstanceMethods
+  include ToParamable
+  
   has_many :user_reviews
   has_many :users, :through => :user_reviews
   has_many :critic_reviews  
@@ -6,9 +9,8 @@ class Movie < ActiveRecord::Base
 
   has_many :movie_genres
   has_many :genres, :through => :movie_genres
-
-  
-  include Averageable::InstanceMethods
+ 
+  before_save :slugify
 
   def to_slug
     self.metacritic_url.gsub("/", "%2F").gsub(":", "%3A")

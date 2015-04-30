@@ -2,12 +2,15 @@ class Critic < ActiveRecord::Base
   
   extend Averageable::ClassMethods
   include Averageable::InstanceMethods
+  include ToParamable
 
   has_many :critic_publications
   has_many :publications, :through => :critic_publications
 
   has_many :critic_reviews
   has_many :movies, :through => :critic_reviews
+
+  before_save :slugify
 
   def name_show
     self.name.present? ? self.name : "<uncredited>"

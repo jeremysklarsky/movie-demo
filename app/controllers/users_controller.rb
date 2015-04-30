@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
 
     before_action :set_user, only: [:show]
-
+    before_action :login_required, only: [:show, :stats]  
   def new
     @user = User.new
   end
@@ -19,10 +19,14 @@ class UsersController < ApplicationController
   def show
     @movies = current_user.movies.sort_by{|movie|movie.name}
     @fact = MovieFact.all.sample.content
+    respond_to do |f|
+      f.html
+      f.json { render :partial => "users/stats.json" }
+    end
   end
 
   def stats
-    @user = current_user
+    @user = User.find_by_slug(params[:user_id])
     if @user.movies.size > 5
       @top_critic = @user.top_critic if @user.top_critic
       @bottom_critic = @user.bottom_critic if @user.bottom_critic
@@ -30,6 +34,7 @@ class UsersController < ApplicationController
       @top_rated_movie = @user.top_rated_movie
       @bottom_rated_movie = @user.bottom_rated_movie
     end
+
   end
 
   private
@@ -38,6 +43,6 @@ class UsersController < ApplicationController
   end
 
   def set_user
-    @user = User.find(params[:id])
+    @user = User.find_by_slug(params[:id])
   end
 end

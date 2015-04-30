@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   get 'signup' => 'users#new', :as => 'signup' 
 
   resources :movies, :only => ['show', 'index']
+  
   get 'search' => 'search#new', :as => 'search'
   post 'search' => 'search#create'
   post 'critic_search' => 'search#critics'

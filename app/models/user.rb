@@ -1,4 +1,6 @@
 class User < ActiveRecord::Base
+  include Averageable::InstanceMethods, ToParamable
+  
   validates_uniqueness_of :email
   validates_presence_of :name, :email
   validates_format_of :email, :with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i
@@ -15,9 +17,10 @@ class User < ActiveRecord::Base
   has_many :movies, :through => :reviews
   has_many :similarity_scores
   
-  include Averageable::InstanceMethods
+  before_save :slugify
 
   attr_accessor :top_critic, :bottom_critic, :avg_percentile, :reviews_by_genre
+
 
   def gather_critics
     critic_matcher.find_user_critics
